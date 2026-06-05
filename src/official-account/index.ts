@@ -1,5 +1,8 @@
 import { AccessToken } from "./modules/access-token";
 import { type ApplicationBaseConfig, OfficialAccountApplication } from "./modules/application";
+import { OfficialAccountSubscribeScenes } from "./modules/user";
+
+export { OfficialAccountSubscribeScenes };
 
 export type WechatOfficialAccountConfig = ApplicationBaseConfig & {
   /**
