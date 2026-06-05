@@ -5,6 +5,7 @@ import type { AccessTokenInterface } from "../../core/access-token";
 import type { Config } from "../../core/config";
 import { WechatError } from "../../core/error";
 import { withTrailingSlash } from "../../core/utils";
+import { Tag } from "./tag";
 import { User } from "./user";
 
 export type ApplicationBaseConfig = {
@@ -72,5 +73,9 @@ export class OfficialAccountApplication {
 
   user(): User {
     return new User(this.accessToken(), this._client);
+  }
+
+  tag(): Tag {
+    return new Tag(this.accessToken(), this._client);
   }
 }
