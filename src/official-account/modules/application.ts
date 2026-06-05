@@ -5,6 +5,7 @@ import type { AccessTokenInterface } from "../../core/access-token";
 import type { Config } from "../../core/config";
 import { WechatError } from "../../core/error";
 import { withTrailingSlash } from "../../core/utils";
+import { Menu } from "./menu";
 import { Tag } from "./tag";
 import { User } from "./user";
 
@@ -77,5 +78,9 @@ export class OfficialAccountApplication {
 
   tag(): Tag {
     return new Tag(this.accessToken(), this._client);
+  }
+
+  menu(): Menu {
+    return new Menu(this.accessToken(), this._client);
   }
 }
