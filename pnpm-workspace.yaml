@@ -1,0 +1,8 @@
+overrides:
+  safer-buffer: npm:@nolyfill/safer-buffer@^1
+engineStrict: true
+allowBuilds:
+  lefthook: true
+minimumReleaseAgeExclude:
+  - "@resolid/config"
+  - "@resolid/utils"
