@@ -19,9 +19,10 @@ function createOfficialAccount(
 
 describe("WechatOfficialAccount integration", () => {
   it("should test User, Tag and Menu from wechat api", async () => {
-    const officialAccountUser = createOfficialAccount().user();
-    const officialAccountTag = createOfficialAccount().tag();
-    const officialAccountMenu = createOfficialAccount().menu();
+    const officialAccount = createOfficialAccount();
+    const officialAccountUser = officialAccount.user();
+    const officialAccountTag = officialAccount.tag();
+    const officialAccountMenu = officialAccount.menu();
 
     const fans = await officialAccountUser.getFans();
     expect(fans.data.openid.length).toBeGreaterThan(0);
@@ -97,4 +98,14 @@ describe("WechatOfficialAccount integration", () => {
     const menuDeleted = await officialAccountMenu.deleteMenu();
     expect(menuDeleted).toBe(true);
   }, 60_000);
+
+  it("should test UserAnalytics from wechat api", async () => {
+    const analytics = createOfficialAccount().userAnalytics();
+
+    const summaryData = await analytics.getSummary("2026-06-01", "2026-06-06");
+    expect(summaryData).toBeDefined();
+
+    const cumulateData = await analytics.getCumulate("2026-06-01", "2026-06-06");
+    expect(cumulateData).toBeDefined();
+  });
 });

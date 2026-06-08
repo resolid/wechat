@@ -8,6 +8,7 @@ import { withTrailingSlash } from "../../core/utils";
 import { Menu } from "./menu";
 import { Tag } from "./tag";
 import { User } from "./user";
+import { UserAnalytics } from "./user-analytics";
 
 export type ApplicationBaseConfig = {
   /**
@@ -72,15 +73,23 @@ export class OfficialAccountApplication {
     return this._accessToken;
   }
 
+  private _user?: User;
   user(): User {
-    return new User(this.accessToken(), this._client);
+    return (this._user ??= new User(this.accessToken(), this._client));
   }
 
+  private _userAnalytics?: UserAnalytics;
+  userAnalytics(): UserAnalytics {
+    return (this._userAnalytics ??= new UserAnalytics(this.accessToken(), this._client));
+  }
+
+  private _tag?: Tag;
   tag(): Tag {
-    return new Tag(this.accessToken(), this._client);
+    return (this._tag ??= new Tag(this.accessToken(), this._client));
   }
 
+  private _menu?: Menu;
   menu(): Menu {
-    return new Menu(this.accessToken(), this._client);
+    return (this._menu ??= new Menu(this.accessToken(), this._client));
   }
 }
