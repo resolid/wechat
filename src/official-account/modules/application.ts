@@ -1,10 +1,11 @@
 import { Cacher } from "@resolid/cache";
 import { MemoryCache, NullCache } from "@resolid/cache/stores";
-import { type FetchInstance, ufetch } from "@resolid/utils/http";
-import type { AccessTokenInterface } from "../../core/access-token";
+import { ufetch } from "@resolid/utils/http";
+import type { AccessTokenInterface } from "../../core/base";
 import type { Config } from "../../core/config";
-import { WechatError } from "../../core/error";
+import { OpenApiApplication } from "../../core/open-api";
 import { withTrailingSlash } from "../../core/utils";
+import { ArticleAnalytics } from "./article-analytics";
 import { Menu } from "./menu";
 import { Tag } from "./tag";
 import { User } from "./user";
@@ -34,15 +35,11 @@ export type ApplicationConfig = ApplicationBaseConfig & {
   accessToken?: AccessTokenInterface;
 };
 
-export class OfficialAccountApplication {
-  protected readonly _appId: string;
+export class OfficialAccountApplication extends OpenApiApplication {
   protected readonly _token: string;
   protected readonly _aesKey: string;
-  protected readonly _client: FetchInstance;
   protected readonly _cache: Cacher;
   protected readonly _debug: boolean;
-
-  protected readonly _accessToken: AccessTokenInterface | undefined;
 
   constructor({
     appId,
@@ -53,24 +50,24 @@ export class OfficialAccountApplication {
     debug = false,
     cache = new Cacher({ store: debug ? new NullCache() : new MemoryCache() }),
   }: ApplicationConfig) {
-    this._appId = appId;
+    super(
+      appId,
+      ufetch.create({
+        baseUrl: withTrailingSlash(baseUrl),
+        responseFormat: "json",
+      }),
+      accessToken,
+    );
+
     this._token = token;
     this._aesKey = aesKey;
-    this._client = ufetch.create({
-      baseUrl: withTrailingSlash(baseUrl),
-      responseFormat: "json",
-    });
     this._cache = cache;
     this._debug = debug;
-    this._accessToken = accessToken;
   }
 
-  accessToken(): AccessTokenInterface {
-    if (!this._accessToken) {
-      throw new WechatError("accessToken is not configured");
-    }
-
-    return this._accessToken;
+  private _articleAnalytics?: ArticleAnalytics;
+  articleAnalytics(): ArticleAnalytics {
+    return (this._articleAnalytics ??= new ArticleAnalytics(this.accessToken(), this._client));
   }
 
   private _user?: User;

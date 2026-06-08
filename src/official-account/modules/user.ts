@@ -1,7 +1,6 @@
-import type { FetchInstance } from "@resolid/utils/http";
 import { isString } from "@resolid/utils";
-import type { AccessTokenInterface } from "../../core/access-token";
 import { WechatError, type WechatResponse } from "../../core/error";
+import { BaseModule } from "../../core/module";
 import { assertWechatResponse } from "../../core/utils";
 
 export type OfficialAccountUsersResult = {
@@ -111,10 +110,7 @@ export type OfficialAccountChangeOpenIdResult = WechatResponse & {
   }[];
 };
 
-export class User {
-  private readonly _accessToken;
-  private readonly _client;
-
+export class User extends BaseModule {
   public static readonly BLACKLIST_GET = "/cgi-bin/tags/members/getblacklist";
   public static readonly BLACKLIST_BATCH = "/cgi-bin/tags/members/batchblacklist";
   public static readonly BLACKLIST_BATCH_REMOVE = "/cgi-bin/tags/members/batchunblacklist";
@@ -123,11 +119,6 @@ export class User {
   public static readonly FANS_GET = "/cgi-bin/user/get";
   public static readonly REMARK_UPDATE = "/cgi-bin/user/info/updateremark";
   public static readonly OPENID_CHANGE = "/cgi-bin/changeopenid";
-
-  constructor(accessToken: AccessTokenInterface, client: FetchInstance) {
-    this._accessToken = accessToken;
-    this._client = client;
-  }
 
   private _checkOpenIdsSize(openIds: unknown[], size: number) {
     if (openIds.length > size) {

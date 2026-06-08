@@ -3,6 +3,7 @@ import { env } from "node:process";
 import { describe, expect, it } from "vitest";
 import type { OfficialAccountMenuButton } from "./modules/menu";
 import { WechatOfficialAccount, type WechatOfficialAccountConfig } from "./index";
+import { User } from "./modules/user";
 
 function createOfficialAccount(
   options?: Partial<Omit<WechatOfficialAccountConfig, "cache" | "debug" | "baseUrl">>,
@@ -18,6 +19,19 @@ function createOfficialAccount(
 }
 
 describe("WechatOfficialAccount integration", () => {
+  it("should test openApi from wechat api", async () => {
+    const api = createOfficialAccount().openApi();
+
+    const quota = await api.getApiQuota(User.INFO_GET);
+    expect(quota).toBeDefined();
+
+    const resetApi = await api.clearApiQuota(User.INFO_GET);
+    expect(resetApi).toBe(true);
+
+    const cleared = await api.clearQuota();
+    expect(cleared).toBe(true);
+  });
+
   it("should test User, Tag and Menu from wechat api", async () => {
     const officialAccount = createOfficialAccount();
     const officialAccountUser = officialAccount.user();
@@ -89,8 +103,8 @@ describe("WechatOfficialAccount integration", () => {
       await officialAccountMenu.deleteConditionalMenu(conditionalMenuCreated);
     expect(conditionalMenuDeleted).toBe(true);
 
-    const userUntaged = await officialAccountTag.batchUntagUsers(tagCreated.id, [openId]);
-    expect(userUntaged.length).toBe(0);
+    const userUntagged = await officialAccountTag.batchUntagUsers(tagCreated.id, [openId]);
+    expect(userUntagged.length).toBe(0);
 
     const tagDeleted = await officialAccountTag.deleteTag(tagCreated.id);
     expect(tagDeleted).toBe(true);
@@ -107,5 +121,21 @@ describe("WechatOfficialAccount integration", () => {
 
     const cumulateData = await analytics.getCumulate("2026-06-01", "2026-06-06");
     expect(cumulateData).toBeDefined();
+  });
+
+  it("should test ArticleAnalytics from wechat api", async () => {
+    const analytics = createOfficialAccount().articleAnalytics();
+
+    const readData = await analytics.getRead("2026-06-01");
+    expect(readData).toBeDefined();
+
+    const shareData = await analytics.getShare("2026-06-01");
+    expect(shareData).toBeDefined();
+
+    const summaryData = await analytics.getSummary("2026-06-01", "2026-06-01");
+    expect(summaryData).toBeDefined();
+
+    const detailsData = await analytics.getDetails("2026-06-01");
+    expect(detailsData).toBeDefined();
   });
 });

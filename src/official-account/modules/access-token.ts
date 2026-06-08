@@ -1,6 +1,6 @@
 import type { Cacher } from "@resolid/cache";
 import type { FetchInstance } from "@resolid/utils/http";
-import type { AccessTokenInterface } from "../../core/access-token";
+import type { AccessTokenInterface } from "../../core/base";
 import type { WechatResponse } from "../../core/error";
 import { assertWechatResponse } from "../../core/utils";
 

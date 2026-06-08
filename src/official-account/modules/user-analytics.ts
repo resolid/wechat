@@ -1,6 +1,5 @@
-import type { FetchInstance } from "@resolid/utils/http";
-import type { AccessTokenInterface } from "../../core/access-token";
 import type { WechatResponse } from "../../core/error";
+import { BaseModule } from "../../core/module";
 import { assertWechatResponse } from "../../core/utils";
 
 export type OfficialAccountUserSummaryItem = {
@@ -33,17 +32,9 @@ export type OfficialAccountUserCumulateItem = {
   cumulate_user: number;
 };
 
-export class UserAnalytics {
-  private readonly _accessToken;
-  private readonly _client;
-
+export class UserAnalytics extends BaseModule {
   public static readonly SUMMARY = "/datacube/getusersummary";
   public static readonly CUMULATE = "/datacube/getusercumulate";
-
-  constructor(accessToken: AccessTokenInterface, client: FetchInstance) {
-    this._accessToken = accessToken;
-    this._client = client;
-  }
 
   /**
    * 获取用户增减数据

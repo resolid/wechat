@@ -1,7 +1,6 @@
-import type { FetchInstance } from "@resolid/utils/http";
-import type { AccessTokenInterface } from "../../core/access-token";
 import type { AtLeastOne } from "../../core/types";
 import { WechatError, type WechatResponse } from "../../core/error";
+import { BaseModule } from "../../core/module";
 import { assertWechatResponse } from "../../core/utils";
 
 type MenuBase = {
@@ -79,21 +78,13 @@ export type OfficialAccountMenuGetResult = {
   }[];
 };
 
-export class Menu {
-  private readonly _accessToken;
-  private readonly _client;
-
+export class Menu extends BaseModule {
   public static readonly GET = "/cgi-bin/menu/get";
   public static readonly CREATE = "/cgi-bin/menu/create";
   public static readonly DELETE = "/cgi-bin/menu/delete";
   public static readonly CONDITIONAL_ADD = "/cgi-bin/menu/addconditional";
   public static readonly CONDITIONAL_DELETE = "/cgi-bin/menu/delconditional";
   public static readonly CONDITIONAL_MATCH = "/cgi-bin/menu/trymatch";
-
-  constructor(accessToken: AccessTokenInterface, client: FetchInstance) {
-    this._accessToken = accessToken;
-    this._client = client;
-  }
 
   private _checkMenuButtons(buttons: OfficialAccountMenuButton[]) {
     if (buttons.length > 3) {

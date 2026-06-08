@@ -1,6 +1,5 @@
-import type { FetchInstance } from "@resolid/utils/http";
-import type { AccessTokenInterface } from "../../core/access-token";
 import { WechatHttpError, type WechatResponse } from "../../core/error";
+import { BaseModule } from "../../core/module";
 import { assertWechatResponse } from "../../core/utils";
 
 export type OfficialAccountTag = {
@@ -36,10 +35,7 @@ export type OfficialAccountTagFansResult = {
   next_openid: string;
 };
 
-export class Tag {
-  private readonly _accessToken;
-  private readonly _client;
-
+export class Tag extends BaseModule {
   public static readonly GET = "/cgi-bin/tags/get";
   public static readonly CREATE = "/cgi-bin/tags/create";
   public static readonly UPDATE = "/cgi-bin/tags/update";
@@ -48,11 +44,6 @@ export class Tag {
   public static readonly USERS_BATCH_TAG = "/cgi-bin/tags/members/batchtagging";
   public static readonly USERS_BATCH_UNTAG = "/cgi-bin/tags/members/batchuntagging";
   public static readonly USER_TAGS_GET = "/cgi-bin/tags/getidlist";
-
-  constructor(accessToken: AccessTokenInterface, client: FetchInstance) {
-    this._accessToken = accessToken;
-    this._client = client;
-  }
 
   /**
    * 获取标签

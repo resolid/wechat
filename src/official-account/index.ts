@@ -1,3 +1,4 @@
+import type { AccessTokenInterface } from "../core/base";
 import { AccessToken } from "./modules/access-token";
 import { type ApplicationBaseConfig, OfficialAccountApplication } from "./modules/application";
 import { OfficialAccountSubscribeScenes } from "./modules/user";
@@ -41,13 +42,13 @@ export class WechatOfficialAccount extends OfficialAccountApplication {
     };
   }
 
-  override accessToken(): AccessToken {
-    return new AccessToken(
+  override accessToken(): AccessTokenInterface {
+    return (this._accessToken ??= new AccessToken(
       this._appId,
       this._appSecret,
       this._stableAccessToken,
       this._client,
       this._cache,
-    );
+    ));
   }
 }
