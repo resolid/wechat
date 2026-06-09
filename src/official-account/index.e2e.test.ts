@@ -138,4 +138,29 @@ describe("WechatOfficialAccount integration", () => {
     const detailsData = await analytics.getDetails("2026-06-01");
     expect(detailsData).toBeDefined();
   });
+
+  it("should test MessageAnalytics from wechat api", async () => {
+    const analytics = createOfficialAccount().messageAnalytics();
+
+    const upstreamItems = await analytics.getUpstream("2026-06-01", "2026-06-06");
+    expect(upstreamItems).toBeDefined();
+
+    const monthUpstreamItems = await analytics.getMonthUpstream("2026-05-05");
+    expect(monthUpstreamItems).toBeDefined();
+
+    const weekUpstreamItems = await analytics.getWeekUpstream("2026-05-05");
+    expect(weekUpstreamItems).toBeDefined();
+
+    const hourUpstreamItems = await analytics.getHourUpstream("2026-06-01");
+    expect(hourUpstreamItems).toBeDefined();
+
+    const distUpstreamItems = await analytics.getDistUpstream("2026-06-01", "2026-06-06");
+    expect(distUpstreamItems).toBeDefined();
+
+    const distWeekUpstreamItems = await analytics.getDistWeekUpstream("2026-06-01", "2026-06-06");
+    expect(distWeekUpstreamItems).toBeDefined();
+
+    const distMonthUpstreamItems = await analytics.getDistMonthUpstream("2026-06-01", "2026-06-06");
+    expect(distMonthUpstreamItems).toBeDefined();
+  });
 });

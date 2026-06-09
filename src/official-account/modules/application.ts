@@ -7,6 +7,7 @@ import { OpenApiApplication } from "../../core/open-api";
 import { withTrailingSlash } from "../../core/utils";
 import { ArticleAnalytics } from "./article-analytics";
 import { Menu } from "./menu";
+import { MessageAnalytics } from "./message-analytics";
 import { Tag } from "./tag";
 import { User } from "./user";
 import { UserAnalytics } from "./user-analytics";
@@ -68,6 +69,11 @@ export class OfficialAccountApplication extends OpenApiApplication {
   private _articleAnalytics?: ArticleAnalytics;
   articleAnalytics(): ArticleAnalytics {
     return (this._articleAnalytics ??= new ArticleAnalytics(this.accessToken(), this._client));
+  }
+
+  private _messageAnalytics?: MessageAnalytics;
+  messageAnalytics(): MessageAnalytics {
+    return (this._messageAnalytics ??= new MessageAnalytics(this.accessToken(), this._client));
   }
 
   private _user?: User;
