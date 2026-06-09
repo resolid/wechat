@@ -46,8 +46,8 @@ export class WechatOfficialAccount extends OfficialAccountApplication {
       this._appId,
       this._appSecret,
       this._stableAccessToken,
-      this._client,
-      this._cache,
+      this.client,
+      this.cache,
     )) as AccessToken;
   }
 }

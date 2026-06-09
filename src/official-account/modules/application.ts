@@ -1,10 +1,5 @@
-import { Cacher } from "@resolid/cache";
-import { MemoryCache, NullCache } from "@resolid/cache/stores";
-import { ufetch } from "@resolid/utils/http";
 import type { AccessTokenInterface } from "../../core/base";
-import type { Config } from "../../core/config";
-import { OpenApiApplication } from "../../core/open-api";
-import { withTrailingSlash } from "../../core/utils";
+import { OpenApiApplication, type OpenApiConfig } from "../../core/open-api";
 import { ArticleAnalytics } from "./article-analytics";
 import { InterfaceAnalytics } from "./interface-analytics";
 import { Menu } from "./menu";
@@ -15,11 +10,6 @@ import { UserAnalytics } from "./user-analytics";
 
 export type ApplicationBaseConfig = {
   /**
-   *  微信应用 AppID
-   */
-  appId: string;
-
-  /**
    *  消息签名令牌 Token
    */
   token?: string;
@@ -28,7 +18,7 @@ export type ApplicationBaseConfig = {
    *  消息加解密密钥 EncodingAESKey
    */
   aesKey?: string;
-} & Config;
+} & OpenApiConfig;
 
 export type ApplicationConfig = ApplicationBaseConfig & {
   /**
@@ -40,65 +30,54 @@ export type ApplicationConfig = ApplicationBaseConfig & {
 export class OfficialAccountApplication extends OpenApiApplication {
   protected readonly _token: string;
   protected readonly _aesKey: string;
-  protected readonly _cache: Cacher;
-  protected readonly _debug: boolean;
 
   constructor({
     appId,
-    accessToken,
     token = "",
     aesKey = "",
     baseUrl = "https://api.weixin.qq.com/",
-    debug = false,
-    cache = new Cacher({ store: debug ? new NullCache() : new MemoryCache() }),
+    accessToken,
+    debug,
+    cache,
   }: ApplicationConfig) {
-    super(
-      appId,
-      ufetch.create({
-        baseUrl: withTrailingSlash(baseUrl),
-        responseFormat: "json",
-      }),
-      accessToken,
-    );
+    super({ appId, baseUrl, debug, cache }, accessToken);
 
     this._token = token;
     this._aesKey = aesKey;
-    this._cache = cache;
-    this._debug = debug;
   }
 
   private _articleAnalytics?: ArticleAnalytics;
   articleAnalytics(): ArticleAnalytics {
-    return (this._articleAnalytics ??= new ArticleAnalytics(this.accessToken(), this._client));
+    return (this._articleAnalytics ??= new ArticleAnalytics(this.accessToken(), this.client));
   }
 
   private _messageAnalytics?: MessageAnalytics;
   messageAnalytics(): MessageAnalytics {
-    return (this._messageAnalytics ??= new MessageAnalytics(this.accessToken(), this._client));
+    return (this._messageAnalytics ??= new MessageAnalytics(this.accessToken(), this.client));
   }
 
   private _interfaceAnalytics?: InterfaceAnalytics;
   interfaceAnalytics(): InterfaceAnalytics {
-    return (this._interfaceAnalytics ??= new InterfaceAnalytics(this.accessToken(), this._client));
+    return (this._interfaceAnalytics ??= new InterfaceAnalytics(this.accessToken(), this.client));
   }
 
   private _user?: User;
   user(): User {
-    return (this._user ??= new User(this.accessToken(), this._client));
+    return (this._user ??= new User(this.accessToken(), this.client));
   }
 
   private _userAnalytics?: UserAnalytics;
   userAnalytics(): UserAnalytics {
-    return (this._userAnalytics ??= new UserAnalytics(this.accessToken(), this._client));
+    return (this._userAnalytics ??= new UserAnalytics(this.accessToken(), this.client));
   }
 
   private _tag?: Tag;
   tag(): Tag {
-    return (this._tag ??= new Tag(this.accessToken(), this._client));
+    return (this._tag ??= new Tag(this.accessToken(), this.client));
   }
 
   private _menu?: Menu;
   menu(): Menu {
-    return (this._menu ??= new Menu(this.accessToken(), this._client));
+    return (this._menu ??= new Menu(this.accessToken(), this.client));
   }
 }

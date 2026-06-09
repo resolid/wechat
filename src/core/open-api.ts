@@ -1,6 +1,6 @@
 import type { FetchInstance } from "@resolid/utils/http";
 import type { WechatResponse } from "./error";
-import { type AccessTokenInterface, BaseApplication } from "./base";
+import { type AccessTokenInterface, BaseApplication, type BaseConfig } from "./base";
 import { BaseModule } from "./module";
 import { assertWechatResponse } from "./utils";
 
@@ -113,7 +113,7 @@ export class OpenApi extends BaseModule {
   /**
    * 使用 AppSecret 重置API调用次数
    *
-   * - 该接口通过 appsecret 调用，解决了 accesss_token 耗尽无法调用「重置 API 调用次数」的问题。
+   * - 该接口通过 appsecret 调用，解决了 access_token 耗尽无法调用「重置 API 调用次数」的问题。
    * - 每个账号每月使用「重置 API 调用次数」与本接口共10次清零操作机会，清零生效一次即用掉一次机会；
    *
    * @param appId 要被清空的账号的 appid
@@ -133,10 +133,26 @@ export class OpenApi extends BaseModule {
   }
 }
 
+export type OpenApiConfig = {
+  /**
+   *  微信应用 AppID
+   */
+  appId: string;
+} & BaseConfig;
+
 export abstract class OpenApiApplication extends BaseApplication {
+  protected readonly _appId: string;
   private _openApi?: OpenApi;
 
+  protected constructor(
+    { appId, ...rest }: OpenApiConfig,
+    accessToken: AccessTokenInterface | undefined,
+  ) {
+    super(rest, accessToken);
+    this._appId = appId;
+  }
+
   openApi(): OpenApi {
-    return (this._openApi ??= new OpenApi(this._appId, this.accessToken(), this._client));
+    return (this._openApi ??= new OpenApi(this._appId, this.accessToken(), this.client));
   }
 }
