@@ -163,4 +163,14 @@ describe("WechatOfficialAccount integration", () => {
     const distMonthUpstreamItems = await analytics.getDistMonthUpstream("2026-06-01", "2026-06-06");
     expect(distMonthUpstreamItems).toBeDefined();
   });
+
+  it("should test InterfaceAnalytics from wechat api", async () => {
+    const analytics = createOfficialAccount().interfaceAnalytics();
+
+    const summaryItems = await analytics.getSummary("2026-05-01", "2026-05-28");
+    expect(summaryItems).toBeDefined();
+
+    const hourSummaryItems = await analytics.getHourSummary("2026-06-01");
+    expect(hourSummaryItems).toBeDefined();
+  });
 });
