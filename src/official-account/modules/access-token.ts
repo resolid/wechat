@@ -16,6 +16,8 @@ export class AccessToken implements AccessTokenInterface {
   private readonly _cache;
   private readonly _stableAccessToken;
 
+  protected readonly _cacheKeyPrefix = "OfficialAccount";
+
   public static readonly TOKEN = "/cgi-bin/token";
   public static readonly STABLE_TOKEN = "/cgi-bin/stable_token";
 
@@ -33,8 +35,8 @@ export class AccessToken implements AccessTokenInterface {
     this._cache = cache;
   }
 
-  getTokenCacheKey() {
-    return `WechatOfficialAccount.${this._appId}.${this._stableAccessToken}`;
+  getCacheKey() {
+    return `${this._cacheKeyPrefix}.${this._appId}.${this._stableAccessToken}`;
   }
 
   /**
@@ -44,7 +46,7 @@ export class AccessToken implements AccessTokenInterface {
    * @returns 后台接口调用凭据（Access Token）
    */
   async getToken(): Promise<string> {
-    return this._cache.getOrSet(this.getTokenCacheKey(), async (ctx) => {
+    return this._cache.getOrSet(this.getCacheKey(), async (ctx) => {
       const result = await this._requestToken();
       ctx.setTtl(result.expires_in - 10);
 
@@ -63,7 +65,7 @@ export class AccessToken implements AccessTokenInterface {
   async refreshToken(forceRefresh = false): Promise<string> {
     const result = await this._requestToken(forceRefresh);
 
-    await this._cache.set(this.getTokenCacheKey(), result.access_token, result.expires_in - 10);
+    await this._cache.set(this.getCacheKey(), result.access_token, result.expires_in - 10);
 
     return result.access_token;
   }
