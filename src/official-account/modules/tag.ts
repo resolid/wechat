@@ -1,6 +1,6 @@
-import { WechatHttpError, type WechatResponse } from "../../core/error";
+import { WechatFetchError, type WechatFetchResponse } from "../../core/error";
 import { BaseModule } from "../../core/module";
-import { assertWechatResponse } from "../../core/utils";
+import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountTag = {
   /** 标签 id，由微信分配 */
@@ -54,7 +54,7 @@ export class Tag extends BaseModule {
   async getTags(): Promise<OfficialAccountTagInfo[]> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | { tags: OfficialAccountTagInfo[] }>(
+    const result = await this._client<WechatFetchResponse | { tags: OfficialAccountTagInfo[] }>(
       Tag.GET,
       {
         method: "GET",
@@ -63,7 +63,7 @@ export class Tag extends BaseModule {
       },
     );
 
-    assertWechatResponse("Failed to create tag:", result);
+    assertWechatFetchResponse("Failed to create tag:", result);
 
     return result.tags;
   }
@@ -79,13 +79,16 @@ export class Tag extends BaseModule {
   async createTag(name: string): Promise<OfficialAccountTag> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | { tag: OfficialAccountTag }>(Tag.CREATE, {
-      method: "POST",
-      query: { access_token: accessToken },
-      body: JSON.stringify({ tag: { name } }),
-    });
+    const result = await this._client<WechatFetchResponse | { tag: OfficialAccountTag }>(
+      Tag.CREATE,
+      {
+        method: "POST",
+        query: { access_token: accessToken },
+        body: JSON.stringify({ tag: { name } }),
+      },
+    );
 
-    assertWechatResponse("Failed to create tag:", result);
+    assertWechatFetchResponse("Failed to create tag:", result);
 
     return result.tag;
   }
@@ -101,13 +104,13 @@ export class Tag extends BaseModule {
   async updateTag(tag: OfficialAccountTag): Promise<boolean> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(Tag.UPDATE, {
+    const result = await this._client<WechatFetchResponse>(Tag.UPDATE, {
       method: "POST",
       query: { access_token: accessToken },
       body: JSON.stringify({ tag }),
     });
 
-    assertWechatResponse("Failed to create tag:", result);
+    assertWechatFetchResponse("Failed to create tag:", result);
 
     return true;
   }
@@ -123,13 +126,13 @@ export class Tag extends BaseModule {
   async deleteTag(id: number): Promise<boolean> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(Tag.DELETE, {
+    const result = await this._client<WechatFetchResponse>(Tag.DELETE, {
       method: "POST",
       query: { access_token: accessToken },
       body: JSON.stringify({ tag: { id } }),
     });
 
-    assertWechatResponse("Failed to delete tag:", result);
+    assertWechatFetchResponse("Failed to delete tag:", result);
 
     return true;
   }
@@ -146,13 +149,16 @@ export class Tag extends BaseModule {
   async getTagFans(id: number, nextOpenId: string = ""): Promise<OfficialAccountTagFansResult> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountTagFansResult>(Tag.FANS_GET, {
-      method: "POST",
-      query: { access_token: accessToken },
-      body: JSON.stringify({ tagid: id, next_openid: nextOpenId }),
-    });
+    const result = await this._client<WechatFetchResponse | OfficialAccountTagFansResult>(
+      Tag.FANS_GET,
+      {
+        method: "POST",
+        query: { access_token: accessToken },
+        body: JSON.stringify({ tagid: id, next_openid: nextOpenId }),
+      },
+    );
 
-    assertWechatResponse("Failed to get tag fans:", result);
+    assertWechatFetchResponse("Failed to get tag fans:", result);
 
     return result;
   }
@@ -169,7 +175,7 @@ export class Tag extends BaseModule {
   async batchTagUsers(id: number, openIds: string[]): Promise<string[]> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse & { fail_openid_list?: string[] }>(
+    const result = await this._client<WechatFetchResponse & { fail_openid_list?: string[] }>(
       Tag.USERS_BATCH_TAG,
       {
         method: "POST",
@@ -180,7 +186,7 @@ export class Tag extends BaseModule {
     );
 
     if (result.errcode != 0 && result.errcode != 45171) {
-      throw new WechatHttpError("Failed to batch tag users:", result);
+      throw new WechatFetchError("Failed to batch tag users:", result);
     }
 
     return result.fail_openid_list ?? [];
@@ -198,7 +204,7 @@ export class Tag extends BaseModule {
   async batchUntagUsers(id: number, openIds: string[]): Promise<string[]> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse & { fail_openid_list?: string[] }>(
+    const result = await this._client<WechatFetchResponse & { fail_openid_list?: string[] }>(
       Tag.USERS_BATCH_UNTAG,
       {
         method: "POST",
@@ -209,7 +215,7 @@ export class Tag extends BaseModule {
     );
 
     if (result.errcode != 0 && result.errcode != 45171) {
-      throw new WechatHttpError("Failed to batch untag users:", result);
+      throw new WechatFetchError("Failed to batch untag users:", result);
     }
 
     return result.fail_openid_list ?? [];
@@ -226,7 +232,7 @@ export class Tag extends BaseModule {
   async getUserTags(openId: string): Promise<number[]> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | { tagid_list?: number[] }>(
+    const result = await this._client<WechatFetchResponse | { tagid_list?: number[] }>(
       Tag.USER_TAGS_GET,
       {
         method: "POST",
@@ -236,7 +242,7 @@ export class Tag extends BaseModule {
       },
     );
 
-    assertWechatResponse("Failed to get user tags:", result);
+    assertWechatFetchResponse("Failed to get user tags:", result);
 
     return result.tagid_list ?? [];
   }

@@ -1,6 +1,6 @@
-import type { WechatResponse } from "../../core/error";
+import type { WechatFetchResponse } from "../../core/error";
 import { BaseModule } from "../../core/module";
-import { assertWechatResponse } from "../../core/utils";
+import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountInterfaceSummaryItem = {
   /** 数据的日期 */
@@ -40,14 +40,14 @@ export class InterfaceAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountInterfaceSummaryItem[] }
+      WechatFetchResponse | { list: OfficialAccountInterfaceSummaryItem[] }
     >(InterfaceAnalytics.SUMMARY, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: beginDate, end_date: endDate },
     });
 
-    assertWechatResponse("Failed to get interface summary data:", result);
+    assertWechatFetchResponse("Failed to get interface summary data:", result);
 
     return result.list;
   }
@@ -64,14 +64,14 @@ export class InterfaceAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountInterfaceHourSummaryItem[] }
+      WechatFetchResponse | { list: OfficialAccountInterfaceHourSummaryItem[] }
     >(InterfaceAnalytics.HOUR_SUMMARY, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: date, end_date: date },
     });
 
-    assertWechatResponse("Failed to get interface hour summary data:", result);
+    assertWechatFetchResponse("Failed to get interface hour summary data:", result);
 
     return result.list;
   }

@@ -1,6 +1,7 @@
 import { AccessToken } from "./modules/access-token";
 import { type ApplicationBaseConfig, OfficialAccountApplication } from "./modules/application";
 import { OfficialAccountSubscribeScenes } from "./modules/user";
+import { Webhook } from "./modules/webhook";
 
 export { OfficialAccountSubscribeScenes };
 
@@ -49,5 +50,9 @@ export class WechatOfficialAccount extends OfficialAccountApplication {
       this.client,
       this.cache,
     )) as AccessToken;
+  }
+
+  webhook(request: Request): Webhook {
+    return new Webhook(request, this._encryptor);
   }
 }

@@ -1,6 +1,6 @@
-import type { WechatResponse } from "../../core/error";
+import type { WechatFetchResponse } from "../../core/error";
 import { BaseModule } from "../../core/module";
-import { assertWechatResponse } from "../../core/utils";
+import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountMessageUpstreamItem = {
   /** 数据的日期 */
@@ -52,14 +52,14 @@ export class MessageAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountMessageUpstreamItem[] }
+      WechatFetchResponse | { list: OfficialAccountMessageUpstreamItem[] }
     >(MessageAnalytics.UPSTREAM, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: beginDate, end_date: endDate },
     });
 
-    assertWechatResponse("Failed to get message upstream data:", result);
+    assertWechatFetchResponse("Failed to get message upstream data:", result);
 
     return result.list;
   }
@@ -76,14 +76,14 @@ export class MessageAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountMessageUpstreamItem[] }
+      WechatFetchResponse | { list: OfficialAccountMessageUpstreamItem[] }
     >(MessageAnalytics.MONTH_UPSTREAM, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: date, end_date: date },
     });
 
-    assertWechatResponse("Failed to get message month upstream data:", result);
+    assertWechatFetchResponse("Failed to get message month upstream data:", result);
 
     return result.list;
   }
@@ -100,14 +100,14 @@ export class MessageAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountMessageUpstreamItem[] }
+      WechatFetchResponse | { list: OfficialAccountMessageUpstreamItem[] }
     >(MessageAnalytics.HOUR_UPSTREAM, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: date, end_date: date },
     });
 
-    assertWechatResponse("Failed to get message hour upstream data:", result);
+    assertWechatFetchResponse("Failed to get message hour upstream data:", result);
 
     return result.list;
   }
@@ -124,14 +124,14 @@ export class MessageAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountMessageUpstreamItem[] }
+      WechatFetchResponse | { list: OfficialAccountMessageUpstreamItem[] }
     >(MessageAnalytics.WEEK_UPSTREAM, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: date, end_date: date },
     });
 
-    assertWechatResponse("Failed to get message week upstream data:", result);
+    assertWechatFetchResponse("Failed to get message week upstream data:", result);
 
     return result.list;
   }
@@ -152,14 +152,14 @@ export class MessageAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountMessageDistUpstreamItem[] }
+      WechatFetchResponse | { list: OfficialAccountMessageDistUpstreamItem[] }
     >(MessageAnalytics.DIST_UPSTREAM, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: beginDate, end_date: endDate },
     });
 
-    assertWechatResponse("Failed to get message dist upstream data:", result);
+    assertWechatFetchResponse("Failed to get message dist upstream data:", result);
 
     return result.list;
   }
@@ -180,14 +180,14 @@ export class MessageAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountMessageDistUpstreamItem[] }
+      WechatFetchResponse | { list: OfficialAccountMessageDistUpstreamItem[] }
     >(MessageAnalytics.DIST_WEEK_UPSTREAM, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: beginDate, end_date: endDate },
     });
 
-    assertWechatResponse("Failed to get message dist week upstream data:", result);
+    assertWechatFetchResponse("Failed to get message dist week upstream data:", result);
 
     return result.list;
   }
@@ -208,14 +208,14 @@ export class MessageAnalytics extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { list: OfficialAccountMessageDistUpstreamItem[] }
+      WechatFetchResponse | { list: OfficialAccountMessageDistUpstreamItem[] }
     >(MessageAnalytics.DIST_MONTH_UPSTREAM, {
       method: "POST",
       query: { access_token: accessToken },
       body: { begin_date: beginDate, end_date: endDate },
     });
 
-    assertWechatResponse("Failed to get message dist month upstream data:", result);
+    assertWechatFetchResponse("Failed to get message dist month upstream data:", result);
 
     return result.list;
   }

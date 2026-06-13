@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { setupFetchMock } from "../../../test/mock-fetch";
-import { WechatHttpError } from "../../core/error";
+import { WechatFetchError } from "../../core/error";
 import { AccessToken } from "../modules/access-token";
 import { createOfficialAccount } from "./utils";
 
@@ -85,6 +85,6 @@ describe("OfficialAccountAccessToken", () => {
 
     const accessToken = createOfficialAccount().accessToken();
 
-    await expect(accessToken.getToken()).rejects.toThrow(WechatHttpError);
+    await expect(accessToken.getToken()).rejects.toThrow(WechatFetchError);
   });
 });

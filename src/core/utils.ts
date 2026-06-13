@@ -1,13 +1,13 @@
 import XMLBuilder from "fast-xml-builder";
 import { XMLParser } from "fast-xml-parser";
-import { WechatHttpError, type WechatResponse } from "./error";
+import { WechatFetchError, type WechatFetchResponse } from "./error";
 
-export function assertWechatResponse<T extends object>(
+export function assertWechatFetchResponse<T extends object>(
   message: string,
-  response: WechatResponse | T,
+  response: WechatFetchResponse | T,
 ): asserts response is T {
   if ("errcode" in response && response.errcode != 0) {
-    throw new WechatHttpError(message, response);
+    throw new WechatFetchError(message, response);
   }
 }
 

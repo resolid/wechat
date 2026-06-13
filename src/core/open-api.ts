@@ -1,8 +1,8 @@
 import type { FetchInstance } from "@resolid/utils/http";
-import type { WechatResponse } from "./error";
+import type { WechatFetchResponse } from "./error";
 import { type AccessTokenInterface, BaseApplication, type BaseConfig } from "./base";
 import { BaseModule } from "./module";
-import { assertWechatResponse } from "./utils";
+import { assertWechatFetchResponse } from "./utils";
 
 type QuotaLimit = {
   /** 周期内可调用数量，单位 次 */
@@ -51,7 +51,7 @@ export class OpenApi extends BaseModule {
   async getApiQuota(cgiPath: string): Promise<WechatOpenApiQuotaResult> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | WechatOpenApiQuotaResult>(
+    const result = await this._client<WechatFetchResponse | WechatOpenApiQuotaResult>(
       OpenApi.API_QUOTA_GET,
       {
         method: "POST",
@@ -60,7 +60,7 @@ export class OpenApi extends BaseModule {
       },
     );
 
-    assertWechatResponse("Failed to get open-api quota:", result);
+    assertWechatFetchResponse("Failed to get open-api quota:", result);
 
     return result;
   }
@@ -77,13 +77,13 @@ export class OpenApi extends BaseModule {
   async clearApiQuota(cgiPath: string): Promise<boolean> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(OpenApi.API_QUOTA_CLEAR, {
+    const result = await this._client<WechatFetchResponse>(OpenApi.API_QUOTA_CLEAR, {
       method: "POST",
       query: { access_token: accessToken },
       body: { cgi_path: cgiPath },
     });
 
-    assertWechatResponse("Failed to clear open-api quota:", result);
+    assertWechatFetchResponse("Failed to clear open-api quota:", result);
 
     return true;
   }
@@ -99,13 +99,13 @@ export class OpenApi extends BaseModule {
   async clearQuota(appId?: string): Promise<boolean> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(OpenApi.QUOTA_CLEAR, {
+    const result = await this._client<WechatFetchResponse>(OpenApi.QUOTA_CLEAR, {
       method: "POST",
       query: { access_token: accessToken },
       body: { appid: appId ?? this._appId },
     });
 
-    assertWechatResponse("Failed to clear open-api quota:", result);
+    assertWechatFetchResponse("Failed to clear open-api quota:", result);
 
     return true;
   }
@@ -122,12 +122,12 @@ export class OpenApi extends BaseModule {
    * @return 是否成功
    * */
   async clearQuotaBySecret(appId: string, appSecret: string): Promise<boolean> {
-    const result = await this._client<WechatResponse>(OpenApi.QUOTA_CLEAR_BY_SECRET, {
+    const result = await this._client<WechatFetchResponse>(OpenApi.QUOTA_CLEAR_BY_SECRET, {
       method: "POST",
       body: { appid: appId, appsecret: appSecret },
     });
 
-    assertWechatResponse("Failed to clear open-api quota:", result);
+    assertWechatFetchResponse("Failed to clear open-api quota:", result);
 
     return true;
   }

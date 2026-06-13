@@ -1,7 +1,7 @@
-import type { AtLeastOne } from "../../core/types";
-import { WechatError, type WechatResponse } from "../../core/error";
+import type { AtLeastOne } from "@resolid/utils";
+import { WechatError, type WechatFetchResponse } from "../../core/error";
 import { BaseModule } from "../../core/module";
-import { assertWechatResponse } from "../../core/utils";
+import { assertWechatFetchResponse } from "../../core/utils";
 
 type MenuBase = {
   name: string;
@@ -111,13 +111,13 @@ export class Menu extends BaseModule {
 
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(Menu.CREATE, {
+    const result = await this._client<WechatFetchResponse>(Menu.CREATE, {
       method: "POST",
       query: { access_token: accessToken },
       body: JSON.stringify({ button: buttons }),
     });
 
-    assertWechatResponse("Failed to create menu:", result);
+    assertWechatFetchResponse("Failed to create menu:", result);
 
     return true;
   }
@@ -131,12 +131,15 @@ export class Menu extends BaseModule {
   async getMenu(): Promise<OfficialAccountMenuGetResult> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountMenuGetResult>(Menu.GET, {
-      method: "GET",
-      query: { access_token: accessToken },
-    });
+    const result = await this._client<WechatFetchResponse | OfficialAccountMenuGetResult>(
+      Menu.GET,
+      {
+        method: "GET",
+        query: { access_token: accessToken },
+      },
+    );
 
-    assertWechatResponse("Failed to get menu:", result);
+    assertWechatFetchResponse("Failed to get menu:", result);
 
     return result;
   }
@@ -150,12 +153,12 @@ export class Menu extends BaseModule {
   async deleteMenu(): Promise<boolean> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(Menu.DELETE, {
+    const result = await this._client<WechatFetchResponse>(Menu.DELETE, {
       method: "GET",
       query: { access_token: accessToken },
     });
 
-    assertWechatResponse("Failed to delete menu:", result);
+    assertWechatFetchResponse("Failed to delete menu:", result);
 
     return true;
   }
@@ -177,13 +180,16 @@ export class Menu extends BaseModule {
 
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | { menuid: string }>(Menu.CONDITIONAL_ADD, {
-      method: "POST",
-      query: { access_token: accessToken },
-      body: JSON.stringify({ button: buttons, matchrule: matchRule }),
-    });
+    const result = await this._client<WechatFetchResponse | { menuid: string }>(
+      Menu.CONDITIONAL_ADD,
+      {
+        method: "POST",
+        query: { access_token: accessToken },
+        body: JSON.stringify({ button: buttons, matchrule: matchRule }),
+      },
+    );
 
-    assertWechatResponse("Failed to create conditional menu:", result);
+    assertWechatFetchResponse("Failed to create conditional menu:", result);
 
     return result.menuid;
   }
@@ -199,13 +205,13 @@ export class Menu extends BaseModule {
   async deleteConditionalMenu(id: string): Promise<boolean> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(Menu.CONDITIONAL_DELETE, {
+    const result = await this._client<WechatFetchResponse>(Menu.CONDITIONAL_DELETE, {
       method: "POST",
       query: { access_token: accessToken },
       body: { menuid: id },
     });
 
-    assertWechatResponse("Failed to delete conditional menu:", result);
+    assertWechatFetchResponse("Failed to delete conditional menu:", result);
 
     return true;
   }
@@ -222,14 +228,14 @@ export class Menu extends BaseModule {
     const accessToken = await this._accessToken.getToken();
 
     const result = await this._client<
-      WechatResponse | { menu: { button: OfficialAccountMenuButton[] } }
+      WechatFetchResponse | { menu: { button: OfficialAccountMenuButton[] } }
     >(Menu.CONDITIONAL_MATCH, {
       method: "POST",
       query: { access_token: accessToken },
       body: { user_id: userId },
     });
 
-    assertWechatResponse("Failed to match conditional menu", result);
+    assertWechatFetchResponse("Failed to match conditional menu", result);
 
     return result.menu.button;
   }

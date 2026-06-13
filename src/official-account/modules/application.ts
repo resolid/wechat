@@ -1,4 +1,5 @@
 import type { AccessTokenInterface } from "../../core/base";
+import { Encryptor } from "../../core/encryptor";
 import { OpenApiApplication, type OpenApiConfig } from "../../core/open-api";
 import { ArticleAnalytics } from "./article-analytics";
 import { InterfaceAnalytics } from "./interface-analytics";
@@ -30,6 +31,7 @@ export type ApplicationConfig = ApplicationBaseConfig & {
 export class OfficialAccountApplication extends OpenApiApplication {
   protected readonly _token: string;
   protected readonly _aesKey: string;
+  protected readonly _encryptor: Encryptor | null = null;
 
   constructor({
     appId,
@@ -41,9 +43,12 @@ export class OfficialAccountApplication extends OpenApiApplication {
     cache,
   }: ApplicationConfig) {
     super({ appId, baseUrl, debug, cache }, accessToken);
-
     this._token = token;
     this._aesKey = aesKey;
+
+    if (aesKey.length > 0) {
+      this._encryptor = new Encryptor(appId, token, aesKey);
+    }
   }
 
   private _articleAnalytics?: ArticleAnalytics;

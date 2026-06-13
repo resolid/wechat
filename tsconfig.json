@@ -1,4 +1,4 @@
 {
   "extends": "@resolid/config/tsconfig/lib.json",
-  "include": ["src/**/*", "test/**/*", "*.config.ts", "vitest.setup.ts", "env.d.ts"]
+  "include": ["src/**/*", "test/**/*", "servers/**/*", "*.config.ts", "vitest.setup.ts", "env.d.ts"]
 }

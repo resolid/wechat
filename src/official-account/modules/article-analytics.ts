@@ -1,6 +1,6 @@
-import type { WechatResponse } from "../../core/error";
+import type { WechatFetchResponse } from "../../core/error";
 import { BaseModule } from "../../core/module";
-import { assertWechatResponse } from "../../core/utils";
+import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountArticleReadData = {
   list: {
@@ -150,7 +150,7 @@ export class ArticleAnalytics extends BaseModule {
   async getRead(date: string): Promise<OfficialAccountArticleReadData> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountArticleReadData>(
+    const result = await this._client<WechatFetchResponse | OfficialAccountArticleReadData>(
       ArticleAnalytics.READ,
       {
         method: "POST",
@@ -159,7 +159,7 @@ export class ArticleAnalytics extends BaseModule {
       },
     );
 
-    assertWechatResponse("Failed to get article read data:", result);
+    assertWechatFetchResponse("Failed to get article read data:", result);
 
     return result;
   }
@@ -175,7 +175,7 @@ export class ArticleAnalytics extends BaseModule {
   async getShare(date: string): Promise<OfficialAccountArticleShareData> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountArticleShareData>(
+    const result = await this._client<WechatFetchResponse | OfficialAccountArticleShareData>(
       ArticleAnalytics.SHARE,
       {
         method: "POST",
@@ -184,7 +184,7 @@ export class ArticleAnalytics extends BaseModule {
       },
     );
 
-    assertWechatResponse("Failed to get article share data:", result);
+    assertWechatFetchResponse("Failed to get article share data:", result);
 
     return result;
   }
@@ -201,7 +201,7 @@ export class ArticleAnalytics extends BaseModule {
   async getSummary(beginDate: string, endDate: string): Promise<OfficialAccountArticleSummaryData> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountArticleSummaryData>(
+    const result = await this._client<WechatFetchResponse | OfficialAccountArticleSummaryData>(
       ArticleAnalytics.SUMMARY,
       {
         method: "POST",
@@ -210,7 +210,7 @@ export class ArticleAnalytics extends BaseModule {
       },
     );
 
-    assertWechatResponse("Failed to get article summary data:", result);
+    assertWechatFetchResponse("Failed to get article summary data:", result);
 
     return result;
   }
@@ -226,7 +226,7 @@ export class ArticleAnalytics extends BaseModule {
   async getDetails(date: string): Promise<OfficialAccountArticleDetailsData> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountArticleDetailsData>(
+    const result = await this._client<WechatFetchResponse | OfficialAccountArticleDetailsData>(
       ArticleAnalytics.DETAILS,
       {
         method: "POST",
@@ -235,7 +235,7 @@ export class ArticleAnalytics extends BaseModule {
       },
     );
 
-    assertWechatResponse("Failed to get article details data:", result);
+    assertWechatFetchResponse("Failed to get article details data:", result);
 
     return result;
   }

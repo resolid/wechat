@@ -1,8 +1,8 @@
 import type { Cacher } from "@resolid/cache";
 import type { FetchInstance } from "@resolid/utils/http";
 import type { AccessTokenInterface } from "../../core/base";
-import type { WechatResponse } from "../../core/error";
-import { assertWechatResponse } from "../../core/utils";
+import type { WechatFetchResponse } from "../../core/error";
+import { assertWechatFetchResponse } from "../../core/utils";
 
 type AccessTokenPayload = {
   access_token: string;
@@ -77,7 +77,7 @@ export class AccessToken implements AccessTokenInterface {
       grant_type: "client_credential",
     };
 
-    const result = await this._client<AccessTokenPayload | WechatResponse>(
+    const result = await this._client<AccessTokenPayload | WechatFetchResponse>(
       this._stableAccessToken ? AccessToken.STABLE_TOKEN : AccessToken.TOKEN,
       {
         method: this._stableAccessToken ? "POST" : "GET",
@@ -87,7 +87,7 @@ export class AccessToken implements AccessTokenInterface {
       },
     );
 
-    assertWechatResponse(
+    assertWechatFetchResponse(
       `Failed to get ${this._stableAccessToken ? "stable " : ""}access_token: `,
       result,
     );

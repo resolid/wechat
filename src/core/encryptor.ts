@@ -2,7 +2,8 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:
 import { WechatError } from "./error";
 import { xmlBuild } from "./utils";
 
-type MessageType = "xml" | "json";
+type MessageType = "xml" | "json" | "raw";
+type EncryptResult = { Encrypt: string; MsgSignature: string; TimeStamp: number; Nonce: string };
 
 export class Encryptor {
   private readonly _appId;
@@ -10,7 +11,7 @@ export class Encryptor {
   private readonly _aesKey;
   private readonly _receiveId;
 
-  private readonly _BLOCK_SIZE = 16;
+  private static readonly BLOCK_SIZE = 16;
 
   constructor(appId: string, token: string, aesKey: string, receiveId?: string) {
     this._appId = appId;
@@ -19,21 +20,29 @@ export class Encryptor {
     this._receiveId = receiveId;
   }
 
+  encrypt(plaintext: string, nonce?: string, timestamp?: number, messageType?: "xml"): string;
+  encrypt(plaintext: string, nonce?: string, timestamp?: number, messageType?: "json"): string;
   encrypt(
     plaintext: string,
-    nonce: string = randomBytes(this._BLOCK_SIZE).toString("hex"),
+    nonce?: string,
+    timestamp?: number,
+    messageType?: "raw",
+  ): EncryptResult;
+  encrypt(
+    plaintext: string,
+    nonce: string = randomBytes(Encryptor.BLOCK_SIZE).toString("hex"),
     timestamp: number = Math.floor(Date.now() / 1000),
     messageType: MessageType = "xml",
-  ): string {
+  ): EncryptResult | string {
     const buffer = Buffer.from(plaintext, "utf8");
     const len = Buffer.alloc(4);
     len.writeUInt32BE(buffer.length, 0);
 
     const raw = Buffer.concat([
-      randomBytes(this._BLOCK_SIZE),
+      randomBytes(Encryptor.BLOCK_SIZE),
       len,
       buffer,
-      Buffer.from(this._appId),
+      Buffer.from(this._appId, "utf8"),
     ]);
 
     const blockSize = this._aesKey.length;
@@ -43,11 +52,11 @@ export class Encryptor {
     const cipher = createCipheriv(
       "aes-256-cbc",
       this._aesKey,
-      this._aesKey.subarray(0, this._BLOCK_SIZE),
+      this._aesKey.subarray(0, Encryptor.BLOCK_SIZE),
     ).setAutoPadding(false);
 
     const ciphertext = Buffer.concat([cipher.update(padded), cipher.final()]).toString("base64");
-    const signature = this._signature(this._token, timestamp, nonce, ciphertext);
+    const signature = this.signature(timestamp, nonce, ciphertext);
 
     const result = {
       Encrypt: ciphertext,
@@ -60,18 +69,22 @@ export class Encryptor {
       return xmlBuild(result);
     }
 
-    return JSON.stringify(result);
+    if (messageType == "json") {
+      return JSON.stringify(result);
+    }
+
+    return result;
   }
 
   decrypt(ciphertext: string, msgSignature: string, nonce: string, timestamp: number): string {
-    if (this._signature(this._token, timestamp, nonce, ciphertext) !== msgSignature) {
+    if (this.signature(timestamp, nonce, ciphertext) != msgSignature) {
       throw new WechatError("Invalid Signature.");
     }
 
     const decipher = createDecipheriv(
       "aes-256-cbc",
       this._aesKey,
-      this._aesKey.subarray(0, this._BLOCK_SIZE),
+      this._aesKey.subarray(0, Encryptor.BLOCK_SIZE),
     ).setAutoPadding(false);
 
     const decrypted = Buffer.concat([
@@ -84,23 +97,25 @@ export class Encryptor {
       .subarray(16);
 
     if (content.length < 4) {
-      throw new WechatError("Illegal buffer");
+      throw new WechatError("Invalid encrypted payload.");
     }
 
     const length = content.readUInt32BE(0);
 
     if (content.length < 4 + length) {
-      throw new WechatError("Illegal buffer");
+      throw new WechatError("Invalid encrypted payload.");
     }
 
     if (this._receiveId && content.subarray(4 + length).toString("utf8") != this._receiveId) {
-      throw new WechatError("Invalid appId");
+      throw new WechatError("Invalid receiveId.");
     }
 
     return content.subarray(4, 4 + length).toString("utf8");
   }
 
-  private _signature(...args: (string | number)[]): string {
-    return createHash("sha1").update(args.map(String).sort().join("")).digest("hex");
+  private signature(...args: (string | number)[]): string {
+    return createHash("sha1")
+      .update([this._token, ...args].map(String).sort().join(""))
+      .digest("hex");
   }
 }

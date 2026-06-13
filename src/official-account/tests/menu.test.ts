@@ -1,7 +1,7 @@
+import type { AtLeastOne } from "@resolid/utils";
 import { beforeEach, describe, expect, it } from "vitest";
-import type { AtLeastOne } from "../../core/types";
 import { setupFetchMock } from "../../../test/mock-fetch";
-import { WechatError, WechatHttpError } from "../../core/error";
+import { WechatError, WechatFetchError } from "../../core/error";
 import {
   Menu,
   type OfficialAccountMenuButton,
@@ -77,7 +77,7 @@ describe("OfficialAccountMenu", () => {
       { type: "click", name: "今日歌曲", key: "V1001_TODAY_MUSIC" },
     ];
 
-    await expect(menu.createMenu(buttons)).rejects.toThrow(WechatHttpError);
+    await expect(menu.createMenu(buttons)).rejects.toThrow(WechatFetchError);
   });
 
   it("should get menu successfully", async () => {
@@ -106,7 +106,7 @@ describe("OfficialAccountMenu", () => {
   it("should throw WechatHttpError when get menu api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(menu.getMenu()).rejects.toThrow(WechatHttpError);
+    await expect(menu.getMenu()).rejects.toThrow(WechatFetchError);
   });
 
   it("should delete menu successfully", async () => {
@@ -123,7 +123,7 @@ describe("OfficialAccountMenu", () => {
   it("should throw WechatHttpError when delete menu api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(menu.deleteMenu()).rejects.toThrow(WechatHttpError);
+    await expect(menu.deleteMenu()).rejects.toThrow(WechatFetchError);
   });
 
   it("should create conditional menu successfully", async () => {
@@ -151,7 +151,7 @@ describe("OfficialAccountMenu", () => {
     ];
 
     await expect(menu.createConditionalMenu(buttons, { tag_id: "2" })).rejects.toThrow(
-      WechatHttpError,
+      WechatFetchError,
     );
   });
 
@@ -170,7 +170,7 @@ describe("OfficialAccountMenu", () => {
   it("should throw WechatHttpError when delete conditional menu api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(menu.deleteConditionalMenu("208379533")).rejects.toThrow(WechatHttpError);
+    await expect(menu.deleteConditionalMenu("208379533")).rejects.toThrow(WechatFetchError);
   });
 
   it("should match conditional menu successfully", async () => {

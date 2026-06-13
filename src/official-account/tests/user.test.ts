@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { setupFetchMock } from "../../../test/mock-fetch";
-import { WechatError, WechatHttpError } from "../../core/error";
+import { WechatError, WechatFetchError } from "../../core/error";
 import {
   type OfficialAccountChangeOpenIdResult,
   type OfficialAccountUser,
@@ -69,7 +69,7 @@ describe("User", () => {
   it("should get blacklist throw WechatHttpError when api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(user.getBlacklist()).rejects.toThrow(WechatHttpError);
+    await expect(user.getBlacklist()).rejects.toThrow(WechatFetchError);
   });
 
   it("should batch blacklist successfully", async () => {
@@ -96,7 +96,7 @@ describe("User", () => {
   it("should batch blacklist throw WechatHttpError when api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(user.batchBlacklist(["openid_1"])).rejects.toThrow(WechatHttpError);
+    await expect(user.batchBlacklist(["openid_1"])).rejects.toThrow(WechatFetchError);
   });
 
   it("should batch unblacklist successfully", async () => {
@@ -123,7 +123,7 @@ describe("User", () => {
   it("should batch unblacklist throw WechatHttpError when api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(user.batchUnblacklist(["openid_1"])).rejects.toThrow(WechatHttpError);
+    await expect(user.batchUnblacklist(["openid_1"])).rejects.toThrow(WechatFetchError);
   });
 
   it("should return subscribed user info successfully", async () => {
@@ -157,7 +157,7 @@ describe("User", () => {
   it("should get user info throw WechatHttpError when api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40003, errmsg: "invalid openid" });
 
-    await expect(user.getUserInfo("invalid_openid")).rejects.toThrow(WechatHttpError);
+    await expect(user.getUserInfo("invalid_openid")).rejects.toThrow(WechatFetchError);
   });
 
   it("should return user info list with string openids", async () => {
@@ -225,7 +225,7 @@ describe("User", () => {
   it("should batch user info throw WechatHttpError when api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(user.batchUserInfo(["openid_1"])).rejects.toThrow(WechatHttpError);
+    await expect(user.batchUserInfo(["openid_1"])).rejects.toThrow(WechatFetchError);
   });
 
   it("should return fans list successfully", async () => {
@@ -253,7 +253,7 @@ describe("User", () => {
   it("should get fans throw WechatHttpError when api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(user.getFans()).rejects.toThrow(WechatHttpError);
+    await expect(user.getFans()).rejects.toThrow(WechatFetchError);
   });
 
   it("should update remark successfully", async () => {
@@ -271,7 +271,7 @@ describe("User", () => {
   it("should update remark throw WechatHttpError when api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40003, errmsg: "invalid openid" });
 
-    await expect(user.updateRemark("invalid_openid", "备注名")).rejects.toThrow(WechatHttpError);
+    await expect(user.updateRemark("invalid_openid", "备注名")).rejects.toThrow(WechatFetchError);
   });
 
   it("should change openid successfully", async () => {

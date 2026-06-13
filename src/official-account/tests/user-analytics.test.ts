@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { setupFetchMock } from "../../../test/mock-fetch";
-import { WechatHttpError } from "../../core/error";
+import { WechatFetchError } from "../../core/error";
 import {
   type OfficialAccountUserCumulateItem,
   type OfficialAccountUserSummaryItem,
@@ -53,7 +53,7 @@ describe("UserAnalytics", () => {
       });
 
       await expect(analytics.getSummary("2026-06-01", "2026-06-07")).rejects.toThrow(
-        WechatHttpError,
+        WechatFetchError,
       );
     });
   });
@@ -92,7 +92,7 @@ describe("UserAnalytics", () => {
       });
 
       await expect(analytics.getCumulate("2026-06-01", "2026-06-07")).rejects.toThrow(
-        WechatHttpError,
+        WechatFetchError,
       );
     });
   });

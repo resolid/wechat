@@ -1,7 +1,7 @@
 import { isString } from "@resolid/utils";
-import { WechatError, type WechatResponse } from "../../core/error";
+import { WechatError, type WechatFetchResponse } from "../../core/error";
 import { BaseModule } from "../../core/module";
-import { assertWechatResponse } from "../../core/utils";
+import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountUsersResult = {
   /**
@@ -99,7 +99,7 @@ type SubscribedUser = {
 
 export type OfficialAccountUser = UnsubscribedUser | SubscribedUser;
 
-export type OfficialAccountChangeOpenIdResult = WechatResponse & {
+export type OfficialAccountChangeOpenIdResult = WechatFetchResponse & {
   result_list: {
     /** 旧 openId */
     ori_openid: string;
@@ -137,7 +137,7 @@ export class User extends BaseModule {
   async getBlacklist(beginOpenId: string = ""): Promise<OfficialAccountUsersResult> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountUsersResult>(
+    const result = await this._client<WechatFetchResponse | OfficialAccountUsersResult>(
       User.BLACKLIST_GET,
       {
         method: "POST",
@@ -147,7 +147,7 @@ export class User extends BaseModule {
       },
     );
 
-    assertWechatResponse("Failed to get blacklist:", result);
+    assertWechatFetchResponse("Failed to get blacklist:", result);
 
     return result;
   }
@@ -165,13 +165,13 @@ export class User extends BaseModule {
 
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(User.BLACKLIST_BATCH, {
+    const result = await this._client<WechatFetchResponse>(User.BLACKLIST_BATCH, {
       method: "POST",
       query: { access_token: accessToken },
       body: { openid_list: openIds },
     });
 
-    assertWechatResponse("Failed to batch blacklist:", result);
+    assertWechatFetchResponse("Failed to batch blacklist:", result);
 
     return true;
   }
@@ -189,13 +189,13 @@ export class User extends BaseModule {
 
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(User.BLACKLIST_BATCH_REMOVE, {
+    const result = await this._client<WechatFetchResponse>(User.BLACKLIST_BATCH_REMOVE, {
       method: "POST",
       query: { access_token: accessToken },
       body: { openid_list: openIds },
     });
 
-    assertWechatResponse("Failed to batch unblacklist:", result);
+    assertWechatFetchResponse("Failed to batch unblacklist:", result);
 
     return true;
   }
@@ -212,12 +212,12 @@ export class User extends BaseModule {
   async getUserInfo(openId: string, language: string = ""): Promise<OfficialAccountUser> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountUser>(User.INFO_GET, {
+    const result = await this._client<WechatFetchResponse | OfficialAccountUser>(User.INFO_GET, {
       method: "GET",
       query: { access_token: accessToken, openid: openId, lang: language },
     });
 
-    assertWechatResponse("Failed to get userInfo:", result);
+    assertWechatFetchResponse("Failed to get userInfo:", result);
 
     return result;
   }
@@ -237,21 +237,20 @@ export class User extends BaseModule {
 
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | { user_info_list: OfficialAccountUser[] }>(
-      User.INFO_BATCH_GET,
-      {
-        method: "POST",
-        responseFormat: "json",
-        query: { access_token: accessToken },
-        body: JSON.stringify({
-          user_list: userList.map((u) =>
-            isString(u) ? { openid: u, lang: "" } : { openid: u.openid, lang: u.lang ?? "" },
-          ),
-        }),
-      },
-    );
+    const result = await this._client<
+      WechatFetchResponse | { user_info_list: OfficialAccountUser[] }
+    >(User.INFO_BATCH_GET, {
+      method: "POST",
+      responseFormat: "json",
+      query: { access_token: accessToken },
+      body: JSON.stringify({
+        user_list: userList.map((u) =>
+          isString(u) ? { openid: u, lang: "" } : { openid: u.openid, lang: u.lang ?? "" },
+        ),
+      }),
+    });
 
-    assertWechatResponse("Failed to batch userInfo:", result);
+    assertWechatFetchResponse("Failed to batch userInfo:", result);
 
     return result.user_info_list;
   }
@@ -267,12 +266,15 @@ export class User extends BaseModule {
   async getFans(nextOpenId: string = ""): Promise<OfficialAccountUsersResult> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | OfficialAccountUsersResult>(User.FANS_GET, {
-      method: "GET",
-      query: { access_token: accessToken, next_openid: nextOpenId },
-    });
+    const result = await this._client<WechatFetchResponse | OfficialAccountUsersResult>(
+      User.FANS_GET,
+      {
+        method: "GET",
+        query: { access_token: accessToken, next_openid: nextOpenId },
+      },
+    );
 
-    assertWechatResponse("Failed to get fans:", result);
+    assertWechatFetchResponse("Failed to get fans:", result);
 
     return result;
   }
@@ -289,13 +291,13 @@ export class User extends BaseModule {
   async updateRemark(openId: string, remark: string): Promise<boolean> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse>(User.REMARK_UPDATE, {
+    const result = await this._client<WechatFetchResponse>(User.REMARK_UPDATE, {
       method: "POST",
       query: { access_token: accessToken },
       body: { openid: openId, remark },
     });
 
-    assertWechatResponse("Failed to update remark:", result);
+    assertWechatFetchResponse("Failed to update remark:", result);
 
     return true;
   }

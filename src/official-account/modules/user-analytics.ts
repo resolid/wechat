@@ -1,6 +1,6 @@
-import type { WechatResponse } from "../../core/error";
+import type { WechatFetchResponse } from "../../core/error";
 import { BaseModule } from "../../core/module";
-import { assertWechatResponse } from "../../core/utils";
+import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountUserSummaryItem = {
   /** 数据的日期 */
@@ -48,16 +48,15 @@ export class UserAnalytics extends BaseModule {
   async getSummary(beginDate: string, endDate: string): Promise<OfficialAccountUserSummaryItem[]> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | { list: OfficialAccountUserSummaryItem[] }>(
-      UserAnalytics.SUMMARY,
-      {
-        method: "POST",
-        query: { access_token: accessToken },
-        body: { begin_date: beginDate, end_date: endDate },
-      },
-    );
+    const result = await this._client<
+      WechatFetchResponse | { list: OfficialAccountUserSummaryItem[] }
+    >(UserAnalytics.SUMMARY, {
+      method: "POST",
+      query: { access_token: accessToken },
+      body: { begin_date: beginDate, end_date: endDate },
+    });
 
-    assertWechatResponse("Failed to get user summary data:", result);
+    assertWechatFetchResponse("Failed to get user summary data:", result);
 
     return result.list;
   }
@@ -77,16 +76,15 @@ export class UserAnalytics extends BaseModule {
   ): Promise<OfficialAccountUserCumulateItem[]> {
     const accessToken = await this._accessToken.getToken();
 
-    const result = await this._client<WechatResponse | { list: OfficialAccountUserCumulateItem[] }>(
-      UserAnalytics.CUMULATE,
-      {
-        method: "POST",
-        query: { access_token: accessToken },
-        body: { begin_date: beginDate, end_date: endDate },
-      },
-    );
+    const result = await this._client<
+      WechatFetchResponse | { list: OfficialAccountUserCumulateItem[] }
+    >(UserAnalytics.CUMULATE, {
+      method: "POST",
+      query: { access_token: accessToken },
+      body: { begin_date: beginDate, end_date: endDate },
+    });
 
-    assertWechatResponse("Failed to get user cumulate data:", result);
+    assertWechatFetchResponse("Failed to get user cumulate data:", result);
 
     return result.list;
   }

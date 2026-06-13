@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { setupFetchMock } from "../../../test/mock-fetch";
-import { WechatHttpError } from "../../core/error";
+import { WechatFetchError } from "../../core/error";
 import {
   type OfficialAccountTag,
   type OfficialAccountTagFansResult,
@@ -38,7 +38,7 @@ describe("OfficialAccountTag", () => {
   it("should throw WechatHttpError when get tags api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(tag.getTags()).rejects.toThrow(WechatHttpError);
+    await expect(tag.getTags()).rejects.toThrow(WechatFetchError);
   });
 
   it("should create tag successfully", async () => {
@@ -58,7 +58,7 @@ describe("OfficialAccountTag", () => {
   it("should throw WechatHttpError when create tag api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 45158, errmsg: "invalid tag name size" });
 
-    await expect(tag.createTag("每天")).rejects.toThrow(WechatHttpError);
+    await expect(tag.createTag("每天")).rejects.toThrow(WechatFetchError);
   });
 
   it("should update tag successfully", async () => {
@@ -76,7 +76,7 @@ describe("OfficialAccountTag", () => {
   it("should update tag throw WechatHttpError when returns errcode", async () => {
     request.mockResolvedValue({ errcode: 45159, errmsg: "invalid tag id" });
 
-    await expect(tag.updateTag({ id: 134, name: "每天更新" })).rejects.toThrow(WechatHttpError);
+    await expect(tag.updateTag({ id: 134, name: "每天更新" })).rejects.toThrow(WechatFetchError);
   });
 
   it("should delete tag successfully", async () => {
@@ -94,7 +94,7 @@ describe("OfficialAccountTag", () => {
   it("should delete tag throw WechatHttpError when returns errcode", async () => {
     request.mockResolvedValue({ errcode: 45159, errmsg: "invalid tag id" });
 
-    await expect(tag.deleteTag(134)).rejects.toThrow(WechatHttpError);
+    await expect(tag.deleteTag(134)).rejects.toThrow(WechatFetchError);
   });
 
   it("should return tag fans list successfully", async () => {
@@ -136,7 +136,7 @@ describe("OfficialAccountTag", () => {
   it("should tag fans throw WechatHttpError when returns errcode", async () => {
     request.mockResolvedValue({ errcode: 45159, errmsg: "invalid tag id" });
 
-    await expect(tag.getTagFans(134)).rejects.toThrow(WechatHttpError);
+    await expect(tag.getTagFans(134)).rejects.toThrow(WechatFetchError);
   });
 
   it("should batch tag users successfully", async () => {
@@ -165,7 +165,7 @@ describe("OfficialAccountTag", () => {
   it("should throw WechatHttpError when batch tag api returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(tag.batchTagUsers(134, ["openid_1"])).rejects.toThrow(WechatHttpError);
+    await expect(tag.batchTagUsers(134, ["openid_1"])).rejects.toThrow(WechatFetchError);
   });
 
   it("should batch untag users successfully", async () => {
@@ -194,7 +194,7 @@ describe("OfficialAccountTag", () => {
   it("should batch untag throw WechatHttpError when returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40001, errmsg: "invalid credential" });
 
-    await expect(tag.batchUntagUsers(134, ["openid_1"])).rejects.toThrow(WechatHttpError);
+    await expect(tag.batchUntagUsers(134, ["openid_1"])).rejects.toThrow(WechatFetchError);
   });
 
   it("should return user tag ids successfully", async () => {
@@ -219,6 +219,6 @@ describe("OfficialAccountTag", () => {
   it("should user tag ids throw WechatHttpError when returns errcode", async () => {
     request.mockResolvedValue({ errcode: 40003, errmsg: "invalid openid" });
 
-    await expect(tag.getUserTags("invalid_openid")).rejects.toThrow(WechatHttpError);
+    await expect(tag.getUserTags("invalid_openid")).rejects.toThrow(WechatFetchError);
   });
 });
