@@ -2,6 +2,7 @@ import type { AccessTokenInterface } from "../../core/base";
 import { Encryptor } from "../../core/encryptor";
 import { OpenApiApplication, type OpenApiConfig } from "../../core/open-api";
 import { ArticleAnalytics } from "./article-analytics";
+import { Comment } from "./comment";
 import { InterfaceAnalytics } from "./interface-analytics";
 import { Menu } from "./menu";
 import { MessageAnalytics } from "./message-analytics";
@@ -84,5 +85,10 @@ export class OfficialAccountApplication extends OpenApiApplication {
   private _menu?: Menu;
   menu(): Menu {
     return (this._menu ??= new Menu(this.accessToken(), this.client));
+  }
+
+  private _comment?: Comment;
+  comment(): Comment {
+    return (this._comment ??= new Comment(this.accessToken(), this.client));
   }
 }
