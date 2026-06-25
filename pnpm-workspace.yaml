@@ -3,6 +3,7 @@ overrides:
 engineStrict: true
 allowBuilds:
   lefthook: true
+minimumReleaseAge: 600
 minimumReleaseAgeExclude:
   - "@resolid/config"
   - "@resolid/utils"

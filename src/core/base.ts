@@ -5,7 +5,7 @@ import { WechatError } from "./error";
 import { withTrailingSlash } from "./utils";
 
 export interface AccessTokenInterface {
-  getToken(): Promise<string>;
+  getToken: () => Promise<string>;
 }
 
 export type BaseConfig = {
