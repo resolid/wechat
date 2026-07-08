@@ -36,7 +36,7 @@ export class Webhook {
         (message as { Encrypt: string }).Encrypt,
         msgSignature,
         nonce,
-        parseInt(timestamp),
+        Number.parseInt(timestamp),
       );
 
       return this.request.isJsonRequest() ? JSON.parse(decrypted) : xmlParse(decrypted);

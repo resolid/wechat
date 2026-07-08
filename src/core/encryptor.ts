@@ -34,7 +34,7 @@ export class Encryptor {
     timestamp: number = Math.floor(Date.now() / 1000),
     messageType: MessageType = "xml",
   ): EncryptResult | string {
-    const buffer = Buffer.from(plaintext, "utf8");
+    const buffer = Buffer.from(plaintext, "utf-8");
     const len = Buffer.alloc(4);
     len.writeUInt32BE(buffer.length, 0);
 
@@ -42,7 +42,7 @@ export class Encryptor {
       randomBytes(Encryptor.BLOCK_SIZE),
       len,
       buffer,
-      Buffer.from(this._appId, "utf8"),
+      Buffer.from(this._appId, "utf-8"),
     ]);
 
     const blockSize = this._aesKey.length;
@@ -92,9 +92,7 @@ export class Encryptor {
       decipher.final(),
     ]);
 
-    const content = decrypted
-      .subarray(0, decrypted.length - decrypted[decrypted.length - 1]!)
-      .subarray(16);
+    const content = decrypted.subarray(0, decrypted.length - decrypted.at(-1)!).subarray(16);
 
     if (content.length < 4) {
       throw new WechatError("Invalid encrypted payload.");
@@ -106,11 +104,11 @@ export class Encryptor {
       throw new WechatError("Invalid encrypted payload.");
     }
 
-    if (this._receiveId && content.subarray(4 + length).toString("utf8") != this._receiveId) {
+    if (this._receiveId && content.subarray(4 + length).toString("utf-8") != this._receiveId) {
       throw new WechatError("Invalid receiveId.");
     }
 
-    return content.subarray(4, 4 + length).toString("utf8");
+    return content.subarray(4, 4 + length).toString("utf-8");
   }
 
   private signature(...args: (string | number)[]): string {

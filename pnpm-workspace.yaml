@@ -7,3 +7,4 @@ minimumReleaseAge: 600
 minimumReleaseAgeExclude:
   - "@resolid/config"
   - "@resolid/utils"
+  - "@resolid/cache"
