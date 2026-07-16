@@ -27,6 +27,16 @@ export class WechatOfficialAccount extends OfficialAccountApplication {
     this._stableAccessToken = stableAccessToken;
   }
 
+  override accessToken(): AccessToken {
+    return (this._accessToken ??= new AccessToken(
+      this._appId,
+      this._appSecret,
+      this._stableAccessToken,
+      this.client,
+      this.cache,
+    )) as AccessToken;
+  }
+
   account(): {
     appId: string;
     appSecret: string;
@@ -39,16 +49,6 @@ export class WechatOfficialAccount extends OfficialAccountApplication {
       token: this._token,
       aesKey: this._aesKey,
     };
-  }
-
-  override accessToken(): AccessToken {
-    return (this._accessToken ??= new AccessToken(
-      this._appId,
-      this._appSecret,
-      this._stableAccessToken,
-      this.client,
-      this.cache,
-    )) as AccessToken;
   }
 
   webhook(request: Request): Webhook {
