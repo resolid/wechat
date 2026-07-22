@@ -1,5 +1,5 @@
 import type { WechatFetchResponse } from "../../core/error";
-import { BaseModule } from "../../core/module";
+import { AuthorizedModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountListCommentResult = {
@@ -27,7 +27,7 @@ export type OfficialAccountListCommentResult = {
   total: number;
 };
 
-export class Comment extends BaseModule {
+export class Comment extends AuthorizedModule {
   public static readonly OPEN = "/cgi-bin/comment/open";
   public static readonly CLOSE = "/cgi-bin/comment/close";
   public static readonly LIST = "/cgi-bin/comment/list";

@@ -1,7 +1,8 @@
+import type { Cacher } from "@resolid/cache";
 import type { FetchInstance } from "@resolid/utils/http";
 import type { WechatFetchResponse } from "./error";
 import { type AccessTokenInterface, BaseApplication, type BaseConfig } from "./base";
-import { BaseModule } from "./module";
+import { AuthorizedModule } from "./module";
 import { assertWechatFetchResponse } from "./utils";
 
 type QuotaLimit = {
@@ -27,7 +28,7 @@ export type WechatOpenApiQuotaResult = {
   component_rate_limit: QuotaLimit;
 };
 
-export class OpenApi extends BaseModule {
+export class OpenApi extends AuthorizedModule {
   private readonly _appId: string;
 
   public static readonly API_QUOTA_GET = "/cgi-bin/openapi/quota/get";
@@ -35,8 +36,13 @@ export class OpenApi extends BaseModule {
   public static readonly QUOTA_CLEAR = "/cgi-bin/clear_quota";
   public static readonly QUOTA_CLEAR_BY_SECRET = "/cgi-bin/clear_quota/v2";
 
-  constructor(appId: string, accessToken: AccessTokenInterface, client: FetchInstance) {
-    super(accessToken, client);
+  constructor(
+    appId: string,
+    accessToken: AccessTokenInterface,
+    client: FetchInstance,
+    cache: Cacher,
+  ) {
+    super(accessToken, client, cache);
     this._appId = appId;
   }
 
@@ -153,6 +159,11 @@ export abstract class OpenApiApplication extends BaseApplication {
   }
 
   openApi(): OpenApi {
-    return (this._openApi ??= new OpenApi(this._appId, this.accessToken(), this.client));
+    return (this._openApi ??= new OpenApi(
+      this._appId,
+      this.accessToken(),
+      this.client,
+      this.cache,
+    ));
   }
 }

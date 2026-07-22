@@ -1,5 +1,5 @@
 import type { WechatFetchResponse } from "../../core/error";
-import { BaseModule } from "../../core/module";
+import { AuthorizedModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountMessageUpstreamItem = {
@@ -27,7 +27,7 @@ export type OfficialAccountMessageDistUpstreamItem = {
   msg_user: number;
 };
 
-export class MessageAnalytics extends BaseModule {
+export class MessageAnalytics extends AuthorizedModule {
   public static readonly UPSTREAM = "/datacube/getupstreammsg";
   public static readonly MONTH_UPSTREAM = "/datacube/getupstreammsgmonth";
   public static readonly HOUR_UPSTREAM = "/datacube/getupstreammsghour";

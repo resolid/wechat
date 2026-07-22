@@ -54,41 +54,53 @@ export class OfficialAccountApplication extends OpenApiApplication {
 
   private _articleAnalytics?: ArticleAnalytics;
   articleAnalytics(): ArticleAnalytics {
-    return (this._articleAnalytics ??= new ArticleAnalytics(this.accessToken(), this.client));
+    return (this._articleAnalytics ??= new ArticleAnalytics(
+      this.accessToken(),
+      this.client,
+      this.cache,
+    ));
   }
 
   private _messageAnalytics?: MessageAnalytics;
   messageAnalytics(): MessageAnalytics {
-    return (this._messageAnalytics ??= new MessageAnalytics(this.accessToken(), this.client));
+    return (this._messageAnalytics ??= new MessageAnalytics(
+      this.accessToken(),
+      this.client,
+      this.cache,
+    ));
   }
 
   private _interfaceAnalytics?: InterfaceAnalytics;
   interfaceAnalytics(): InterfaceAnalytics {
-    return (this._interfaceAnalytics ??= new InterfaceAnalytics(this.accessToken(), this.client));
+    return (this._interfaceAnalytics ??= new InterfaceAnalytics(
+      this.accessToken(),
+      this.client,
+      this.cache,
+    ));
   }
 
   private _user?: User;
   user(): User {
-    return (this._user ??= new User(this.accessToken(), this.client));
+    return (this._user ??= new User(this.accessToken(), this.client, this.cache));
   }
 
   private _userAnalytics?: UserAnalytics;
   userAnalytics(): UserAnalytics {
-    return (this._userAnalytics ??= new UserAnalytics(this.accessToken(), this.client));
+    return (this._userAnalytics ??= new UserAnalytics(this.accessToken(), this.client, this.cache));
   }
 
   private _tag?: Tag;
   tag(): Tag {
-    return (this._tag ??= new Tag(this.accessToken(), this.client));
+    return (this._tag ??= new Tag(this.accessToken(), this.client, this.cache));
   }
 
   private _menu?: Menu;
   menu(): Menu {
-    return (this._menu ??= new Menu(this.accessToken(), this.client));
+    return (this._menu ??= new Menu(this.accessToken(), this.client, this.cache));
   }
 
   private _comment?: Comment;
   comment(): Comment {
-    return (this._comment ??= new Comment(this.accessToken(), this.client));
+    return (this._comment ??= new Comment(this.accessToken(), this.client, this.cache));
   }
 }

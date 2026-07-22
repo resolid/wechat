@@ -1,6 +1,6 @@
 import { isString } from "@resolid/utils";
 import { WechatError, type WechatFetchResponse } from "../../core/error";
-import { BaseModule } from "../../core/module";
+import { AuthorizedModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountUsersResult = {
@@ -110,7 +110,7 @@ export type OfficialAccountChangeOpenIdResult = WechatFetchResponse & {
   }[];
 };
 
-export class User extends BaseModule {
+export class User extends AuthorizedModule {
   public static readonly BLACKLIST_GET = "/cgi-bin/tags/members/getblacklist";
   public static readonly BLACKLIST_BATCH = "/cgi-bin/tags/members/batchblacklist";
   public static readonly BLACKLIST_BATCH_REMOVE = "/cgi-bin/tags/members/batchunblacklist";

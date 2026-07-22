@@ -1,5 +1,5 @@
 import type { WechatFetchResponse } from "../../core/error";
-import { BaseModule } from "../../core/module";
+import { AuthorizedModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountInterfaceSummaryItem = {
@@ -20,7 +20,7 @@ export type OfficialAccountInterfaceHourSummaryItem = {
   ref_hour: number;
 } & OfficialAccountInterfaceSummaryItem;
 
-export class InterfaceAnalytics extends BaseModule {
+export class InterfaceAnalytics extends AuthorizedModule {
   public static readonly SUMMARY = "/datacube/getinterfacesummary";
   public static readonly HOUR_SUMMARY = "/datacube/getinterfacesummaryhour";
 

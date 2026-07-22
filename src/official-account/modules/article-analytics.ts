@@ -1,5 +1,5 @@
 import type { WechatFetchResponse } from "../../core/error";
-import { BaseModule } from "../../core/module";
+import { AuthorizedModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountArticleReadData = {
@@ -133,7 +133,7 @@ export type OfficialAccountArticleDetailsData = {
   is_delay: boolean;
 };
 
-export class ArticleAnalytics extends BaseModule {
+export class ArticleAnalytics extends AuthorizedModule {
   public static readonly READ = "/datacube/getarticleread";
   public static readonly SHARE = "/datacube/getarticleshare";
   public static readonly SUMMARY = "/datacube/getbizsummary";

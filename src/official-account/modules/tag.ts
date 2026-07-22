@@ -1,5 +1,5 @@
 import { WechatFetchError, type WechatFetchResponse } from "../../core/error";
-import { BaseModule } from "../../core/module";
+import { AuthorizedModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountTag = {
@@ -35,7 +35,7 @@ export type OfficialAccountTagFansResult = {
   next_openid: string;
 };
 
-export class Tag extends BaseModule {
+export class Tag extends AuthorizedModule {
   public static readonly GET = "/cgi-bin/tags/get";
   public static readonly CREATE = "/cgi-bin/tags/create";
   public static readonly UPDATE = "/cgi-bin/tags/update";

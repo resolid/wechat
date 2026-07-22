@@ -1,5 +1,5 @@
 import type { WechatFetchResponse } from "../../core/error";
-import { BaseModule } from "../../core/module";
+import { AuthorizedModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 export type OfficialAccountUserSummaryItem = {
@@ -32,7 +32,7 @@ export type OfficialAccountUserCumulateItem = {
   cumulate_user: number;
 };
 
-export class UserAnalytics extends BaseModule {
+export class UserAnalytics extends AuthorizedModule {
   public static readonly SUMMARY = "/datacube/getusersummary";
   public static readonly CUMULATE = "/datacube/getusercumulate";
 

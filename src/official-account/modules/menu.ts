@@ -1,6 +1,6 @@
 import type { AtLeastOne } from "@resolid/utils";
 import { WechatError, type WechatFetchResponse } from "../../core/error";
-import { BaseModule } from "../../core/module";
+import { AuthorizedModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 type MenuBase = {
@@ -78,7 +78,7 @@ export type OfficialAccountMenuGetResult = {
   }[];
 };
 
-export class Menu extends BaseModule {
+export class Menu extends AuthorizedModule {
   public static readonly GET = "/cgi-bin/menu/get";
   public static readonly CREATE = "/cgi-bin/menu/create";
   public static readonly DELETE = "/cgi-bin/menu/delete";

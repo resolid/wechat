@@ -2,6 +2,7 @@ import type { Cacher } from "@resolid/cache";
 import type { FetchInstance } from "@resolid/utils/http";
 import type { AccessTokenInterface } from "../../core/base";
 import type { WechatFetchResponse } from "../../core/error";
+import { BaseModule } from "../../core/module";
 import { assertWechatFetchResponse } from "../../core/utils";
 
 type AccessTokenPayload = {
@@ -9,11 +10,9 @@ type AccessTokenPayload = {
   expires_in: number;
 };
 
-export class AccessToken implements AccessTokenInterface {
+export class AccessToken extends BaseModule implements AccessTokenInterface {
   private readonly _appId;
   private readonly _appSecret;
-  private readonly _client;
-  private readonly _cache;
   private readonly _stableAccessToken;
 
   protected readonly _cacheKeyPrefix = "OfficialAccount";
@@ -28,11 +27,10 @@ export class AccessToken implements AccessTokenInterface {
     client: FetchInstance,
     cache: Cacher,
   ) {
+    super(client, cache);
     this._appId = appId;
     this._appSecret = appSecret;
     this._stableAccessToken = stableAccessToken;
-    this._client = client;
-    this._cache = cache;
   }
 
   getCacheKey() {
